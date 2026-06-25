@@ -13,6 +13,10 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TermController;
+use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\AnnonceController;
+use App\Http\Controllers\ParentController;
+use App\Http\Controllers\NotificationController;
 
 // =============================================================================
 // Routes publiques
@@ -55,6 +59,19 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     // -------------------------------------------------------------------------
+    // Gestion des parents — gestionnaire uniquement
+    // -------------------------------------------------------------------------
+    Route::middleware('role:gestionnaire')->group(function () {
+        Route::resource('parents', ParentController::class);
+        Route::patch('parents/{parent}/toggle-active', [ParentController::class, 'toggleActive'])
+            ->name('parents.toggle-active');
+        Route::get('parents/{parent}/notifier', [ParentController::class, 'notifierForm'])
+            ->name('parents.notifier');
+        Route::post('parents/{parent}/notifier', [ParentController::class, 'notifierEnvoyer'])
+            ->name('parents.notifier.envoyer');
+    });
+
+    // -------------------------------------------------------------------------
     // Gestion des élèves — gestionnaire uniquement
     // -------------------------------------------------------------------------
     Route::middleware('role:gestionnaire')->group(function () {
@@ -90,6 +107,14 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     // -------------------------------------------------------------------------
+    // Absences et Annonces — gestionnaire uniquement
+    // -------------------------------------------------------------------------
+    Route::middleware('role:gestionnaire')->group(function () {
+        Route::resource('absences', AbsenceController::class);
+        Route::resource('annonces', AnnonceController::class);
+    });
+
+    // -------------------------------------------------------------------------
     // Notes — gestionnaire + enseignant
     // -------------------------------------------------------------------------
     Route::middleware('role:gestionnaire,enseignant')->group(function () {
@@ -119,6 +144,14 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::middleware('role:gestionnaire')->group(function () {
         Route::patch('report-cards/{enrollment}/{term}/publish', [ReportCardController::class, 'publish'])
             ->name('report-cards.publish');
+    });
+
+    // -------------------------------------------------------------------------
+    // Notifications — gestionnaire uniquement
+    // -------------------------------------------------------------------------
+    Route::middleware('role:gestionnaire')->group(function () {
+        Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/envoyer', [NotificationController::class, 'envoyer'])->name('notifications.envoyer');
     });
 
     // -------------------------------------------------------------------------

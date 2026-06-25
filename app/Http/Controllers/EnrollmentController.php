@@ -25,7 +25,7 @@ class EnrollmentController extends Controller
 
         $classes = SchoolClass::forCurrentYear()->orderBy('niveau')->get();
 
-        return view('enrollments.index', compact('enrollments', 'school_classes'));
+        return view('enrollments.index', compact('enrollments', 'classes'));
     }
 
     public function create(): View

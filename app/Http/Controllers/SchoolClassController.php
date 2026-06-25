@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Validation\Rule;
 
 class SchoolClassController extends Controller
 {
@@ -34,16 +35,38 @@ class SchoolClassController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // $data = $request->validate([
+        //     'academic_year_id'       => 'required|exists:academic_years,id',
+        //     'niveau'                 => 'required|in:CP1,CP2,CE1,CE2,CM1,CM2',
+        //     'nom'                    => 'required|string|max:50',
+        //     'teacher_id'             => 'nullable|exists:users,id',
+        //     'effectif_max'           => 'nullable|integer|min:1|max:100',
+        //     'frais_inscription'      => 'required|numeric|min:0',
+        //     'frais_scolarite_annuel' => 'required|numeric|min:0',
+        //     'subjects'               => 'nullable|array',
+        //     'subjects.*'             => 'exists:subjects,id',
+        // ]);
+
         $data = $request->validate([
             'academic_year_id'       => 'required|exists:academic_years,id',
             'niveau'                 => 'required|in:CP1,CP2,CE1,CE2,CM1,CM2',
-            'nom'                    => 'required|string|max:50',
+            'nom'                    => [
+                'required',
+                'string',
+                'max:50',
+                // Unicité : même nom interdit pour la même année scolaire
+                Rule::unique('school_classes', 'nom')
+                    ->where('academic_year_id', $request->academic_year_id),
+            ],
             'teacher_id'             => 'nullable|exists:users,id',
             'effectif_max'           => 'nullable|integer|min:1|max:100',
             'frais_inscription'      => 'required|numeric|min:0',
             'frais_scolarite_annuel' => 'required|numeric|min:0',
             'subjects'               => 'nullable|array',
             'subjects.*'             => 'exists:subjects,id',
+        ], [
+            // Message d'erreur en français
+            'nom.unique' => 'Une classe avec ce nom existe déjà pour cette année scolaire.',
         ]);
 
         // Créer la classe
@@ -82,14 +105,34 @@ class SchoolClassController extends Controller
 
     public function update(Request $request, SchoolClass $schoolClass): RedirectResponse
     {
+        // $data = $request->validate([
+        //     'nom'                    => 'required|string|max:50',
+        //     'teacher_id'             => 'nullable|exists:users,id',
+        //     'effectif_max'           => 'nullable|integer|min:1|max:100',
+        //     'frais_inscription'      => 'required|numeric|min:0',
+        //     'frais_scolarite_annuel' => 'required|numeric|min:0',
+        //     'subjects'               => 'nullable|array',
+        //     'subjects.*'             => 'exists:subjects,id',
+        // ]);
+
         $data = $request->validate([
-            'nom'                    => 'required|string|max:50',
+            'nom' => [
+                'required',
+                'string',
+                'max:50',
+                // Ignorer la classe actuelle lors de la modification
+                Rule::unique('school_classes', 'nom')
+                    ->where('academic_year_id', $schoolClass->academic_year_id)
+                    ->ignore($schoolClass->id),
+            ],
             'teacher_id'             => 'nullable|exists:users,id',
             'effectif_max'           => 'nullable|integer|min:1|max:100',
             'frais_inscription'      => 'required|numeric|min:0',
             'frais_scolarite_annuel' => 'required|numeric|min:0',
             'subjects'               => 'nullable|array',
             'subjects.*'             => 'exists:subjects,id',
+        ], [
+            'nom.unique' => 'Une classe avec ce nom existe déjà pour cette année scolaire.',
         ]);
 
         $schoolClass->update($data);

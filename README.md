@@ -236,3 +236,105 @@ Affichage de la liste des élèves ordonnée de la meilleure à la moins bonne m
 
 -Liste des élèves en retard de paiement (impayés)
 
+
+# Diagramme des classe
+
+┌─────────────────┐         ┌──────────────────┐         ┌─────────────────┐
+│      users      │         │   academic_years  │         │      terms      │
+│─────────────────│         │──────────────────│         │─────────────────│
+│ id              │         │ id               │         │ id              │
+│ name            │         │ libelle          │         │ academic_year_id│
+│ email           │         │ date_debut       │◄────────┤ numero (1|2|3)  │
+│ password        │         │ date_fin         │         │ libelle         │
+│ role            │         │ is_active        │         │ date_debut      │
+│ telephone       │         └──────────┬───────┘         │ date_fin        │
+│ is_active       │                    │                  │ is_closed       │
+└────────┬────────┘                    │                  └─────────────────┘
+         │                             │
+         │              ┌──────────────▼───────┐         ┌─────────────────┐
+         │              │   school_classes      │         │    subjects     │
+         │              │──────────────────────│         │─────────────────│
+         └─────────────►│ id                   │         │ id              │
+          teacher_id    │ academic_year_id      │         │ nom             │
+                        │ teacher_id            │         │ code            │
+                        │ niveau (CP1..CM2)     │         │ coefficient     │
+                        │ nom                  │         │ note_max (10|20)│
+                        │ effectif_max         │         │ is_active       │
+                        │ frais_inscription    │         └────────┬────────┘
+                        │ frais_scolarite      │                  │
+                        └──────────┬───────────┘                  │
+                                   │                               │
+                        ┌──────────▼───────────────────────────────┐
+                        │            class_subject (pivot)          │
+                        │──────────────────────────────────────────│
+                        │ id                                        │
+                        │ class_id ────────────────────────────────►│
+                        │ subject_id ──────────────────────────────►│
+                        │ teacher_id                                │
+                        │ coefficient                               │
+                        └───────────────────────────────────────────┘
+
+┌─────────────────┐         ┌──────────────────┐
+│    students     │         │   enrollments    │
+│─────────────────│         │──────────────────│
+│ id              │         │ id               │
+│ matricule       ├────────►│ student_id       │
+│ nom             │         │ class_id         │
+│ prenom          │         │ academic_year_id │
+│ date_naissance  │         │ date_inscription │
+│ lieu_naissance  │         │ statut           │
+│ sexe (M|F)      │         │ motif_depart     │
+│ photo_path      │         │ created_by       │
+│ nom_pere        │         └────────┬─────────┘
+│ nom_mere        │                  │
+│ tuteur_nom      │         ┌────────┴──────────────────────────────┐
+│ tuteur_telephone│         │                                       │
+│ adresse         │         │                                       │
+│ is_active       │    ┌────▼──────────┐         ┌─────────────────▼──┐
+└─────────────────┘    │   payments    │         │      grades        │
+                        │───────────────│         │────────────────────│
+                        │ id            │         │ id                 │
+                        │ enrollment_id │         │ enrollment_id      │
+                        │ numero_recu   │         │ subject_id         │
+                        │ type_paiement │         │ term_id            │
+                        │ montant_verse │         │ note               │
+                        │ montant_du    │         │ note_max           │
+                        │ montant_rest  │         │ appreciation       │
+                        │ mode_paiement │         │ is_absent          │
+                        │ reference_ext │         │ created_by         │
+                        │ date_paiement │         │ updated_by         │
+                        │ observations  │         └────────────────────┘
+                        │ pdf_path      │
+                        │ created_by    │         ┌────────────────────┐
+                        │ is_annule     │         │    report_cards    │
+                        └───────────────┘         │────────────────────│
+                                                   │ id                 │
+                                                   │ enrollment_id      │
+                                                   │ term_id            │
+                                                   │ moyenne_generale   │
+                                                   │ rang               │
+                                                   │ effectif_classe    │
+                                                   │ mention            │
+                                                   │ appreciation_cons  │
+                                                   │ is_published       │
+                                                   │ calculated_at      │
+                                                   └────────────────────┘
+
+# les relations
+
+academic_years  ──────► terms              (1 année → 3 trimestres)
+academic_years  ──────► school_classes     (1 année → N classes)
+school_classes  ──────► class_subject      (N classes ↔ N matières)
+subjects        ──────► class_subject      (table pivot)
+users           ──────► school_classes     (1 enseignant → N classes)
+students        ──────► enrollments        (1 élève → N inscriptions)
+school_classes  ──────► enrollments        (1 classe → N inscriptions)
+academic_years  ──────► enrollments        (1 année → N inscriptions)
+enrollments     ──────► payments           (1 inscription → N paiements)
+enrollments     ──────► grades             (1 inscription → N notes)
+enrollments     ──────► report_cards       (1 inscription → N bulletins)
+subjects        ──────► grades             (1 matière → N notes)
+terms           ──────► grades             (1 trimestre → N notes)
+terms           ──────► report_cards       (1 trimestre → N bulletins)
+users           ──────► payments           (1 gestionnaire → N paiements)
+users           ──────► grades             (1 enseignant → N notes)

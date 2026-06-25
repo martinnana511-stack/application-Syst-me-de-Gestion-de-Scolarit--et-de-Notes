@@ -82,7 +82,7 @@
             <tr>
                 <td>
                     <div class="school-name">🏫 École Primaire</div>
-                    <div class="school-sub">Système de Gestion de Scolarité</div>
+                    <div class="school-sub">Complexe Scolaire de Saaba</div>
                 </td>
                 <td style="text-align:right;">
                     <div class="doc-title">BULLETIN DE NOTES</div>

@@ -49,13 +49,6 @@
 
 @push('scripts')
 <script>
-// document.getElementById('report-select-form').addEventListener('submit', function(e) {
-//     e.preventDefault();
-//     const classId = document.getElementById('class-select').value;
-//     const termId  = document.getElementById('term-select').value;
-//     if (!classId || !termId) return;
-//     window.location = `/report-cards?class_id=${classId}&term_id=${termId}`;
-// });
 
 document.getElementById('report-select-form').addEventListener('submit', function(e) {
     e.preventDefault();

@@ -151,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const select = document.getElementById('enrollment-select');
     if (!select) return;
 
-    // Initialisation simple — dans un vrai projet utiliser Select2 ou Tom Select
     select.addEventListener('change', function() {
         const enrollmentId = this.value;
         if (!enrollmentId) {

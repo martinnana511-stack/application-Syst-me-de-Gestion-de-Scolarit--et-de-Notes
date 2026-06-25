@@ -170,7 +170,7 @@ body {
     <div class="top-band">
         <div>
             <div class="school-name">🏫 École Primaire</div>
-            <div class="school-sub">Système de Gestion de Scolarité</div>
+            <div class="school-sub">Complexe Scolaire de Saaba</div>
         </div>
         <div class="doc-badge">Reçu de Paiement</div>
     </div>

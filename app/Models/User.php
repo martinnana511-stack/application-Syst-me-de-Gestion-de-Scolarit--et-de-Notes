@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -49,6 +51,11 @@ class User extends Authenticatable
         return $this->role === 'enseignant';
     }
 
+    public function isParent(): bool
+    {
+        return $this->role === 'parent';
+    }
+
     // -------------------------------------------------------------------------
     // Relations
     // -------------------------------------------------------------------------
@@ -71,6 +78,11 @@ class User extends Authenticatable
         return $this->hasMany(Grade::class, 'created_by');
     }
 
+    public function parentEleve(): HasOne
+    {
+        return $this->hasOne(ParentEleve::class);
+    }
+
     // -------------------------------------------------------------------------
     // Scopes
     // -------------------------------------------------------------------------
@@ -83,6 +95,11 @@ class User extends Authenticatable
     public function scopeEnseignants($query)
     {
         return $query->where('role', 'enseignant');
+    }
+
+    public function scopeParents($query)
+    {
+        return $query->where('role', 'parent');
     }
 
     public function scopeActifs($query)

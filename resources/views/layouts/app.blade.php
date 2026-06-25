@@ -45,6 +45,7 @@
             display: flex; flex-direction: column;
             z-index: 1040;
             transition: transform .25s ease;
+            overflow: hidden;
         }
 
         .sidebar-brand {
@@ -89,6 +90,34 @@
             border-left: 3px solid transparent;
             transition: all .15s;
             border-radius: 0;
+        }
+        .sidebar-nav {
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex: 1;
+            width: 100%;
+        }
+        .sidebar-nav.nav {
+            flex-wrap: nowrap !important;
+            flex-direction: column !important;
+            width: var(--sgs-sidebar-w) !important;
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,.2);
+            border-radius: 999px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,.4);
         }
         .sidebar-nav .nav-link i { font-size: 1rem; }
         .sidebar-nav .nav-link:hover,
@@ -234,8 +263,8 @@
 <nav id="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon">🏫</div>
-        <h1>SGS Primaire</h1>
-        <span>Gestion Scolaire</span>
+        <h1>École Primaire</h1>
+        <span><Command>Complexe Scolaire de Saaba</Command></span>
     </div>
 
     <ul class="sidebar-nav nav flex-column mt-2">
@@ -307,9 +336,35 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('settings.academic-years.index') }}"
-               class="nav-link @if(request()->routeIs('settings.academic-years.*')) active @endif">
-                <i class="bi bi-calendar3"></i> Années scolaires
+    <a href="{{ route('settings.academic-years.index') }}"
+       class="nav-link @if(request()->routeIs('settings.academic-years.*')) active @endif">
+        <i class="bi bi-calendar3"></i> Années scolaires
+    </a>
+</li>
+
+        <li><span class="nav-section">Communauté</span></li>
+        <li class="nav-item">
+            <a href="{{ route('parents.index') }}"
+               class="nav-link @if(request()->routeIs('parents.*')) active @endif">
+                <i class="bi bi-people-fill"></i> Parents
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('absences.index') }}"
+               class="nav-link @if(request()->routeIs('absences.*')) active @endif">
+                <i class="bi bi-calendar-x"></i> Absences
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('annonces.index') }}"
+               class="nav-link @if(request()->routeIs('annonces.*')) active @endif">
+                <i class="bi bi-megaphone"></i> Annonces
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('notifications.index') }}"
+               class="nav-link @if(request()->routeIs('notifications.*')) active @endif">
+                <i class="bi bi-bell"></i> Notifications
             </a>
         </li>
         @endgestionnaire

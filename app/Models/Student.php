@@ -166,6 +166,13 @@ class Student extends Model
         return $this->resteAPayer() > 0;
     }
 
+    public function parents(): BelongsToMany
+    {
+        return $this->belongsToMany(ParentEleve::class, 'parent_student', 'student_id', 'parent_id')
+                    ->withPivot('lien_parente', 'is_principal')
+                    ->withTimestamps();
+    }
+
     // -------------------------------------------------------------------------
     // Scopes
     // -------------------------------------------------------------------------

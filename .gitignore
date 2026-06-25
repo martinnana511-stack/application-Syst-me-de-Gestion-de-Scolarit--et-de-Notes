@@ -45,3 +45,4 @@ storage/*.key
 Homestead.yaml
 Homestead.json
 
+"storage/firebase-credentials.json" 

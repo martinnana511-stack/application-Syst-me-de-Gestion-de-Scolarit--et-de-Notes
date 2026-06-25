@@ -46,8 +46,8 @@
                     <div class="school-logo">
                         <span>&#127979;</span>
                     </div>
-                    <h1 class="h4 fw-semibold text-dark mb-1">SGS École Primaire</h1>
-                    <p class="text-muted small">Système de Gestion de Scolarité</p>
+                    <h1 class="h4 fw-semibold text-dark mb-1">École Primaire</h1>
+                    <p class="text-muted small">Complexe Scolaire de Saaba</p>
                 </div>
 
                 {{-- Messages d'erreur --}}
