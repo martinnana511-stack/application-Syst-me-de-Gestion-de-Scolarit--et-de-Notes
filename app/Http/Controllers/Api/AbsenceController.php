@@ -28,7 +28,7 @@ class AbsenceController extends Controller
             'absences' => $absences->map(function ($a) {
                 return [
                     'id'      => $a->id,
-                    'date'    => $a->date,
+                    'date'    => $a->date->format('d/m/Y'),
                     'motif'   => $a->motif ?? 'Non renseigné',
                     'justifie'=> $a->justifie,
                 ];
